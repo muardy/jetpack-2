@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Tonton App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_activity_detail_movie">Detail Movie</string>
+    <string name="title_activity_detail_tv">Detail TV Show</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="dateline">Dateline</string>
+    <string name="description_course">Sinopsis</string>
+    <string name="movie">Movies</string>
+    <string name="tvshow">TV Show</string>
+    <string name="menu_bookmark">bookmark</string>
+    <string name="durasi">Durasi: %s</string>
+    <string name="share_text">Nonton %s Hanya di Tonton App</string>
+    <string name="score">IMDB: %s</string>
+    <string name="nilai">IMDB :</string>
+    <string name="rilis">Tanggal Rilis :</string>
+    <string name="waktu">Durasi :</string>
+    <string name="search">Search</string>
+    <string name="kosong">Data Kosong</string>
+
+
+
+</resources>
