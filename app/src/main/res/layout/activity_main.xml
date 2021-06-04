@@ -6,11 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".home.MainActivity">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/items_movtv" />
+
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -30,7 +26,7 @@
         />
 
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

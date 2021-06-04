@@ -1,23 +1,23 @@
 package com.ardy.jetpackardy.movies
 
-import android.content.Intent
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ardy.jetpackardy.R
-import com.ardy.jetpackardy.data.MovieEntity
 import com.ardy.jetpackardy.databinding.ItemsMovtvBinding
-import com.ardy.jetpackardy.detail.DetailMoviesActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import java.util.ArrayList
 
 class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.CourseViewHolder>() {
-    private var listCourses = ArrayList<MovieEntity>()
+    private var listCourses = ArrayList<Movieresponse>()
+    private var onItemClickCallback: OnItemClickCallback? = null
 
-    fun setCourses(courses: List<MovieEntity>?) {
-        if (courses == null) return
-        this.listCourses.clear()
-        this.listCourses.addAll(courses)
+    fun setCourses(courses: ArrayList<Movieresponse>) {
+        listCourses.clear()
+        listCourses.addAll(courses)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder {
@@ -25,6 +25,10 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.CourseViewHolder>() {
         return CourseViewHolder(itemsAcademyBinding)
     }
 
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         val course = listCourses[position]
         holder.bind(course)
@@ -33,23 +37,24 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesAdapter.CourseViewHolder>() {
     override fun getItemCount(): Int = listCourses.size
 
 
-    class CourseViewHolder(private val binding: ItemsMovtvBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(course: MovieEntity) {
+    inner class CourseViewHolder(private val binding: ItemsMovtvBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(movie: Movieresponse) {
             with(binding) {
-                tvItemTitle.text = course.title
-                tvItemDate.text = itemView.resources.getString(R.string.durasi, course.time)
-                itemView.setOnClickListener {
-                    val intent = Intent(itemView.context, DetailMoviesActivity::class.java)
-                    intent.putExtra(DetailMoviesActivity.EXTRA_COURSE, course.Id)
-                    itemView.context.startActivity(intent)
-                }
+                tvItemTitle.text = movie.title
+                tvItemDate.text = movie.voteAverage.toString()
                 Glide.with(itemView.context)
-                    .load(course.imagePath)
+                    .load("https://image.tmdb.org/t/p/w185" + movie.posterPath)
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                         .error(R.drawable.ic_error))
                     .into(imgPoster)
+                itemView.setOnClickListener {
+                    onItemClickCallback?.onItemClicked(movie)
+                }
             }
         }
+    }
+    interface OnItemClickCallback {
+        fun onItemClicked(data: Movieresponse)
     }
 }

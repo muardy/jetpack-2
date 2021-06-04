@@ -1,31 +1,29 @@
 package com.ardy.jetpackardy.tv
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ardy.jetpackardy.R
-import com.ardy.jetpackardy.data.TvEntity
 import com.ardy.jetpackardy.databinding.ItemsTvBinding
-import com.ardy.jetpackardy.detail.DetailMoviesActivity
-import com.ardy.jetpackardy.detail.DetailTvActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
 class TvAdapter  : RecyclerView.Adapter<TvAdapter.CourseViewHolder>() {
-    private var listTv = ArrayList<TvEntity>()
-
-    fun setCourses(courses: List<TvEntity>?) {
-        if (courses == null) return
-        this.listTv.clear()
-        this.listTv.addAll(courses)
+    private var listTv = ArrayList<TvResponse>()
+    private var onItemClickCallback: OnItemClickCallback? = null
+    fun setCourses(courses: List<TvResponse>) {
+       listTv.clear()
+       listTv.addAll(courses)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder {
         val itemsAcademyBinding = ItemsTvBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CourseViewHolder(itemsAcademyBinding)
     }
-
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         val course = listTv[position]
         holder.bind(course)
@@ -34,23 +32,24 @@ class TvAdapter  : RecyclerView.Adapter<TvAdapter.CourseViewHolder>() {
     override fun getItemCount(): Int = listTv.size
 
 
-    class CourseViewHolder(private val binding: ItemsTvBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(Tv: TvEntity) {
+    inner class CourseViewHolder(private val binding: ItemsTvBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(Tv: TvResponse) {
             with(binding) {
-                tvItemTitle.text = Tv.title
-                tvItemDate.text = itemView.resources.getString(R.string.durasi, Tv.time)
-                itemView.setOnClickListener {
-                    val intent = Intent(itemView.context, DetailTvActivity::class.java)
-                    intent.putExtra(DetailMoviesActivity.EXTRA_COURSE, Tv.Id)
-                    itemView.context.startActivity(intent)
-                }
+                tvItemTitle.text = Tv.name
                 Glide.with(itemView.context)
-                    .load(Tv.imagePath)
+                    .load("https://image.tmdb.org/t/p/w185" + Tv.posterPath)
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error))
                     .into(imgPoster)
+                itemView.setOnClickListener {
+                    onItemClickCallback?.onItemClicked(Tv)
+                }
             }
         }
+    }
+
+    interface OnItemClickCallback {
+        fun onItemClicked(data: TvResponse)
     }
 }
